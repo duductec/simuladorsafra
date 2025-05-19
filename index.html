@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Simulador Dinâmico de Antecipação</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; }
+    label, input, button { display: block; margin: 10px 0; font-size: 16px; }
+    .resultado { margin-top: 20px; font-size: 18px; font-weight: bold; color: green; }
+  </style>
+</head>
+<body>
+  <h2>Simulador Dinâmico de Antecipação</h2>
+
+  <label>Valor da Venda (R$):</label>
+  <input type="number" id="valorBruto" step="0.01" value="1000">
+
+  <label>Nº de Parcelas:</label>
+  <input type="number" id="parcelas" min="1" max="12" value="1">
+
+  <button onclick="calcular()">Calcular Valor Recebido</button>
+
+  <div class="resultado" id="saida"></div>
+
+  <script>
+    const dados = {
+      1: { mdr: 1.59, ant: 1.51 },
+      2: { mdr: 1.99, ant: 2.26 },
+      3: { mdr: 1.99, ant: 2.97 },
+      4: { mdr: 1.99, ant: 3.69 },
+      5: { mdr: 1.99, ant: 4.41 },
+      6: { mdr: 1.99, ant: 5.14 },
+      7: { mdr: 2.29, ant: 5.85 },
+      8: { mdr: 2.29, ant: 6.58 },
+      9: { mdr: 2.29, ant: 7.31 },
+      10: { mdr: 2.29, ant: 8.04 },
+      11: { mdr: 2.29, ant: 8.76 },
+      12: { mdr: 2.29, ant: 9.49 }
+    };
+
+    function calcular() {
+      const valorBruto = parseFloat(document.getElementById("valorBruto").value);
+      const parcelas = parseInt(document.getElementById("parcelas").value);
+
+      if (!valorBruto || !parcelas || parcelas < 1 || parcelas > 12) {
+        document.getElementById("saida").innerText = "Preencha corretamente os campos.";
+        return;
+      }
+
+      const { mdr, ant } = dados[parcelas];
+      const taxaTotal = (mdr + ant) / 100;
+      const valorLiquido = valorBruto * (1 - taxaTotal);
+
+      document.getElementById("saida").innerText =
+        `Taxa MDR: ${mdr.toFixed(2)}% | Taxa de Antecipação: ${ant.toFixed(2)}%
+         → Valor a Receber: R$ ${valorLiquido.toLocaleString("pt-BR", {
+           minimumFractionDigits: 2, maximumFractionDigits: 2
+         })}`;
+    }
+  </script>
+</body>
+</html>
