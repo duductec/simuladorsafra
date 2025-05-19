@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Somador de Valor Bruto + Comissão</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: #f4f4f4;
+    }
+    textarea {
+      width: 100%;
+      height: 300px;
+      font-size: 16px;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    button:hover {
+      background: #1b5e20;
+    }
+    .resultado {
+      margin-top: 20px;
+      font-size: 20px;
+      background: #e8f5e9;
+      padding: 15px;
+      border-radius: 10px;
+      border-left: 5px solid #4caf50;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>💰 Somador de Valor Bruto + Comissão 2%</h2>
+  <p>Cole abaixo sua lista com os dados. O sistema irá somar <strong>apenas a 3ª coluna</strong> com os valores brutos (R$ xxx,xx) e calcular 2% de comissão separadamente.</p>
+
+  <textarea id="entrada" placeholder="Cole aqui sua lista..."></textarea>
+  <br>
+  <button onclick="calcular()">Calcular Totais</button>
+  <button onclick="limpar()">Limpar</button>
+
+  <div class="resultado" id="saida"></div>
+
+  <script>
+    function calcular() {
+      const texto = document.getElementById("entrada").value;
+      const linhas = texto.split('\n');
+      let total = 0;
+
+      for (let linha of linhas) {
+        const colunas = linha.trim().split(/\t|\s{2,}/);
+        if (colunas.length >= 3 && colunas[2].includes('R$')) {
+          let valorStr = colunas[2].replace('R$', '').trim();
+          valorStr = valorStr.replace(',', '.');  // manter ponto decimal
+          const valor = parseFloat(valorStr);
+          if (!isNaN(valor)) total += valor;
+        }
+      }
+
+      const comissao = total * 0.02;
+      const saida = document.getElementById("saida");
+
+      saida.innerHTML = `
+        ✅ Soma dos Valores Brutos: <strong>R$ ${total.toFixed(2).replace('.', ',')}</strong><br>
+        💼 Comissão 2%: <strong style="color:#2e7d32">R$ ${comissao.toFixed(2).replace('.', ',')}</strong>
+      `;
+    }
+
+    function limpar() {
+      document.getElementById("entrada").value = '';
+      document.getElementById("saida").innerHTML = '';
+    }
+  </script>
+
+</body>
+</html>
